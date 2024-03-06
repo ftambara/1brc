@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"runtime/pprof"
 )
 
@@ -18,11 +17,8 @@ func main() {
 	var version int
 	flag.IntVar(&version, "version", 1, "version of the program")
 
-	var cpuProfile bool
-	flag.BoolVar(&cpuProfile, "cpuprofile", false, "write cpu profile to file")
-
-	var memProfile bool
-	flag.BoolVar(&memProfile, "memprofile", false, "write memory profile to file")
+	var cpuProfPath string
+	flag.StringVar(&cpuProfPath, "cpuprof", "", "path to write CPU profile. If empty, no profile will be written")
 
 	// Filename is not a flag but a positional argument
 	var measurementsFile string
@@ -35,8 +31,8 @@ func main() {
 	}
 	measurementsFile = flag.Arg(0)
 
-	if cpuProfile {
-		f, err := os.Create("cpu.prof")
+	if cpuProfPath != "" {
+		f, err := os.Create(cpuProfPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -63,17 +59,5 @@ func main() {
 		v3(file, writer)
 	default:
 		fmt.Printf("Invalid version: %d\n", version)
-	}
-
-	if memProfile {
-		f, err := os.Create("mem.prof")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
-		runtime.GC()
-		if err := pprof.WriteHeapProfile(f); err != nil {
-			log.Fatal(err)
-		}
 	}
 }
