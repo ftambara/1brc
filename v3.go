@@ -20,11 +20,11 @@ func parseFloat(b []byte) (f float64, err error) {
 		whole = whole[1:]
 	}
 	for i, c := range whole {
-		f += float64(c) * math.Pow10(len(whole)-i)
+		f += float64(c-'0') * math.Pow10(len(whole)-i-1)
 	}
 
 	for i, c := range decimal {
-		f += float64(c) * math.Pow10(-(i + 1))
+		f += float64(c-'0') * math.Pow10(-i-1)
 	}
 
 	if negative {
