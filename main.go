@@ -57,6 +57,8 @@ func main() {
 		v2(file, writer)
 	case 3:
 		v3(file, writer)
+	case 4:
+		v4(file, writer)
 	default:
 		fmt.Printf("Invalid version: %d\n", version)
 	}
